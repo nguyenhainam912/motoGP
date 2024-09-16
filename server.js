@@ -10,6 +10,7 @@ const RiderRoute = require('./routes/rider');
 const TeamRoute = require('./routes/team');
 const CountryRoute = require('./routes/country');
 const CalendarRoute = require('./routes/calendar');
+const CalendarRiderRoute = require('./routes/calendarRider');
 
 
 dotenv.config();
@@ -26,6 +27,8 @@ app.use("/api/riders", RiderRoute)
 app.use("/api/teams", TeamRoute)
 app.use("/api/countries", CountryRoute)
 app.use("/api/calendars", CalendarRoute)
+app.use("/api/calendarRider", CalendarRiderRoute)
+
 
 
 app.listen(port, () => {

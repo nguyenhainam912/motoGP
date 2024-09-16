@@ -4,9 +4,9 @@ const Country = require('../models/Country')
 
 module.exports = {
     add: async (req,res)=> {
-        const {name, hashtag, image, category, point, countryId, RiderId} = req.body;
+        const {name, hashtag, image, category, point, countryId, teamId} = req.body;
 
-        if(!name || !hashtag || !image || !category || !countryId || !RiderId ) {
+        if(!name || !hashtag || !image || !category || !countryId || !teamId ) {
             return res.status(400).json({status: false, message: "You have a missing field"})
         }
 
@@ -28,6 +28,18 @@ module.exports = {
            const rider = await Rider.findById(id)
            .populate('countryId')
            .populate('teamId' )
+
+           res.status(200).json(rider)
+        }catch(e){ 
+            res.status(500).json({status: false, message: e.message});
+        }
+    },
+    getByCategory: async (req,res) => {
+        try{
+           const rider = await Rider.find({category: req?.query?.category})
+           .populate('countryId')
+           .populate('teamId' )
+           .sort({ point: -1 });
 
            res.status(200).json(rider)
         }catch(e){ 

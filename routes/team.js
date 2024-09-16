@@ -4,6 +4,7 @@ const teamController = require('../controllers/teamController');
 
 router.post("/add",teamController.add);
 router.get("/getById",teamController.getById);
+router.get("/getByCategory",teamController.getByCategory);
 router.get("/getAll",teamController.getAll);
 router.patch("/update", teamController.update);
 router.delete("/delete", teamController.delete);

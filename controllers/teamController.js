@@ -29,6 +29,14 @@ module.exports = {
             res.status(500).json({status: false, message: e.message});
         }
     },
+    getByCategory: async (req,res) => {
+        try{
+           const team = await Team.find({category: req?.query?.category})
+           res.status(200).json(team)
+        }catch(e){ 
+            res.status(500).json({status: false, message: e.message});
+        }
+    },
     getAll: async (req,res) => {
         try{
             const list = await Team.find().limit(50)
