@@ -67,7 +67,41 @@ module.exports = {
     },
     getByCalendarCategorySession: async (req,res) => {
         try{
-           const calendarRider = await CalendarRider.find({calendarId: req?.query?.calendarId, category: req?.query?.category, session: req?.query?.session}) 
+           var calendarRider = await CalendarRider.find({
+                calendarId: req?.query?.calendarId, category: req?.query?.category, 
+                session: req?.query?.session, 
+            })
+           .populate([
+            { path: 'calendarId', select: 'startDate' },
+            {
+              path: 'riders',
+              populate: [
+                {
+                  path: 'riderId',
+                  model: 'Rider',
+                  select: '-point',
+                  populate: [
+                    {
+                      path: 'countryId',
+                      model: 'Country',
+                    },
+                    {
+                        path: 'teamId',
+                        model: 'Team',
+                    },
+                  ],
+                },
+              ],
+            },
+          ]);
+
+
+            calendarRider = calendarRider.filter(item => {
+                const year = new Date(item.calendarId.startDate).getFullYear();
+                return year == req?.query?.year;
+            });
+
+
            res.status(200).json(calendarRider)
         }catch(e){ 
             res.status(500).json({status: false, message: e.message});

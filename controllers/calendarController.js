@@ -31,7 +31,10 @@ module.exports = {
     },
     getAll: async (req,res) => {
         try{
-            const list = await Calendar.find().limit(50).populate('countryId')
+            const list = await Calendar.find({startDate: {
+                $gte: new Date(req?.query?.year, 0, 1),
+                $lte: new Date(req?.query?.year, 11, 31)
+            }}).limit(50).populate('countryId')
              return res.status(200).json(list)
         }catch(e){ 
             res.status(500).json({status: false, message: e.message});

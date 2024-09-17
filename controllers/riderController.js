@@ -48,9 +48,10 @@ module.exports = {
     },
     getAll: async (req,res) => {
         try{
-            const list = await Rider.find().limit(50)
+            const list = await Rider.find().limit(30)
             .populate('countryId')
             .populate('teamId' )
+            .sort({ point: -1 });
              return res.status(200).json(list)
         }catch(e){ 
             res.status(500).json({status: false, message: e.message});

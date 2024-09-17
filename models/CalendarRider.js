@@ -11,7 +11,7 @@ const ridersSchema = new mongoose.Schema({
 const CalendarRiderSchema = new mongoose.Schema ({
     calendarId:  {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Canlendar",
+        ref: "Calendar",
         required: true,
     },
     riders : [ridersSchema], 
@@ -23,3 +23,4 @@ const CalendarRiderSchema = new mongoose.Schema ({
 
 
 module.exports = mongoose.model('CalendarRider', CalendarRiderSchema)
+
