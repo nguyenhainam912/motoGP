@@ -4,9 +4,9 @@ const Country = require('../models/Country')
 
 module.exports = {
     add: async (req,res)=> {
-        const {name, hashtag, image, category, point, countryId, teamId} = req.body;
+        const {name, hashtag, image, category, point, countryId, teamId, number} = req.body;
 
-        if(!name || !hashtag || !image || !category || !countryId || !teamId ) {
+        if(!name || !hashtag || !image || !category || !countryId || !teamId || !number) {
             return res.status(400).json({status: false, message: "You have a missing field"})
         }
 
