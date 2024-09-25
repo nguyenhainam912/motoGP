@@ -11,52 +11,70 @@ module.exports = {
         }
 
         try{
-            const calendarRider = new CalendarRider({calendarId, riders, category, session})
+            riders.sort(compareTotalTime);
+            
 
-            await calendarRider.save()
+            if(session == 'RAC') {
+                // const result = calendarRiders.reduce((acc, session) => {
+                //     session.riders.forEach(rider => {
+                //       const existingRider = acc.find(item => item.riderId.equals(rider.riderId));
 
-            if(session == 'PR') {
-                var calendarRiders = await CalendarRider.find({calendarId: calendarId, category: category}) 
-
-                const result = calendarRiders.reduce((acc, session) => {
-                    session.riders.forEach(rider => {
-                      const existingRider = acc.find(item => item.riderId.equals(rider.riderId));
-
-                      if (existingRider) {
-                        existingRider.timeFinish = totalTime(rider.timeFinish, existingRider.timeFinish);
-                      } else {
-                        acc.push({ riderId: rider.riderId, timeFinish: rider.timeFinish });
-                      }
-                    });
-                    return acc;
-                }, []);
-
-                result.sort(compareTotalTime);
+                //       if (existingRider) {
+                //         existingRider.timeFinish = totalTime(rider.timeFinish, existingRider.timeFinish);
+                //       } else {
+                //         acc.push({ riderId: rider.riderId, timeFinish: rider.timeFinish });
+                //       }
+                //     });
+                //     return acc;
+                // }, []);
 
                 let point = [25, 20, 15, 13, 11, 10, 9,8,7,6,5,4,3,2,1];
 
-                result.forEach((item, index) => {
+                riders.forEach((item, index) => {
                     if(index >= point.length) {
-                        item.points = 0
+                        item.point = 0
                         return
                     }
                     item.point = point[index];
                 });
-
-                console.log(result)
-
-
-                result.forEach(async(item) => {
+    
+                riders.forEach(async(item) => {
                     const rider = await Rider.findById(item.riderId)
                     rider.point += item.point
 
                     rider.save()
                 });
+    
+                const calendarRider = new CalendarRider({calendarId, riders: riders, category, session: "RAC"})
+
+                await calendarRider.save()
 
 
-                const calendarRiderE = new CalendarRider({calendarId, riders: result, category, session: "RAC"})
+            } else if (session == 'SPR') {
+                    let point = [12, 9,7,6,5,4,3,2,1];
+    
+                    riders.forEach((item, index) => {
+                        if(index >= point.length) {
+                            item.point = 0
+                            return
+                        }
+                        item.point = point[index];
+                    });
 
-                await calendarRiderE.save() 
+                    riders.forEach(async(item) => {
+                        const rider = await Rider.findById(item.riderId)
+                        rider.point += item.point
+    
+                        rider.save()
+                    });
+    
+                    const calendarRider = new CalendarRider({calendarId, riders: riders, category, session: "SPR"})
+    
+                    await calendarRider.save()
+            }else {
+                const calendarRider = new CalendarRider({calendarId, riders, category, session})
+
+                 await calendarRider.save()
             }
             return res.status(201).json({status: true, message: "calendar Rider added successfully"})
 
@@ -159,7 +177,8 @@ function totalTime(a ,b) {
 
 function compareTotalTime(a, b) {
     // Chuyển đổi totalTime thành số để so sánh
-    const timeA = parseFloat(a.timeFinish.replace(':', '.'));
-    const timeB = parseFloat(b.timeFinish.replace(':', '.'));
+    const timeA = parseFloat((a.timeFinish.replace(':', '')));
+    const timeB = parseFloat(b.timeFinish.replace(':', ''));
+
     return timeA - timeB;
 }
