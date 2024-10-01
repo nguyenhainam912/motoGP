@@ -90,7 +90,7 @@ module.exports = {
                 session: req?.query?.session, 
             })
            .populate([
-            { path: 'calendarId', select: 'startDate' },
+            { path: 'calendarId', select: 'startDate title' },
             {
               path: 'riders',
               populate: [
