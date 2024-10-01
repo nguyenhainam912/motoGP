@@ -56,9 +56,9 @@ module.exports = {
     }, 
     update: async (req,res) => {
         try{
-            const {id, name, image, category} = req.body;
+            const {id, name, image, category, color} = req.body;
 
-            await Team.findOneAndUpdate({_id: id}, {name: name,image: image,category: category},{returnOriginal:false});
+            await Team.findOneAndUpdate({_id: id}, {name: name,image: image,category: category, color: color},{returnOriginal:false});
 
             return res.status(201).json({status: true, message: "updated successfully"})
         }catch(e){ 
